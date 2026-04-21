@@ -12,10 +12,7 @@ export default function AppointmentsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get('/appointments')
-      .then(setAppts)
-      .catch(() => {})
-      .finally(() => setLoading(false));
+    api.get('/appointments').then(setAppts).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
   async function updateStatus(id: number, status: string) {
@@ -29,44 +26,53 @@ export default function AppointmentsPage() {
 
   return (
     <div className="page">
-      <div className="stack">
+      <div className="page-header">
         <div className="row">
-          <h1>Bookings</h1>
-          <button className="btn btn-primary" style={{ width: 'auto', padding: '8px 16px', fontSize: '0.9rem' }}
+          <h1 style={{ color: 'var(--white)' }}>Bookings</h1>
+          <button className="btn btn-primary btn-sm" style={{ width: 'auto' }}
             onClick={() => router.push('/new-appointment')}>+ New</button>
         </div>
+        <p className="subtitle">{appts.length} appointment{appts.length !== 1 ? 's' : ''} today</p>
+      </div>
 
+      <div className="page-body">
         {appts.length === 0 && (
-          <div className="card" style={{ textAlign: 'center', color: 'var(--gray)', padding: 40 }}>
-            No appointments today
+          <div className="card" style={{ textAlign: 'center', padding: '48px 20px' }}>
+            <p style={{ fontSize: '2rem', marginBottom: 12 }}>📋</p>
+            <p style={{ fontWeight: 600, marginBottom: 4 }}>No appointments yet</p>
+            <p style={{ color: 'var(--mid)', fontSize: '0.875rem' }}>Tap + New to add one</p>
           </div>
         )}
 
         {appts.map(a => (
-          <div key={a.id} className="card stack" style={{ gap: 8 }}>
+          <div key={a.id} className="card" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <div className="row">
               <div>
-                <strong>{a.customer_name}</strong>
-                {a.is_walkin && <span style={{ marginLeft: 6, fontSize: '0.75rem', color: 'var(--gray)' }}>walk-in</span>}
+                <p style={{ fontWeight: 700, fontSize: '1rem' }}>{a.customer_name}</p>
+                <p style={{ color: 'var(--mid)', fontSize: '0.85rem', marginTop: 2 }}>
+                  {a.service}
+                  {a.is_walkin && <span style={{ marginLeft: 6 }} className="chip">walk-in</span>}
+                </p>
               </div>
-              <span className={`badge badge-${a.status}`}>{a.status.replace('_', ' ')}</span>
-            </div>
-            <div className="row">
-              <span style={{ color: 'var(--gray)' }}>{a.service}</span>
-              <strong>₦{Number(a.amount).toLocaleString()}</strong>
+              <div style={{ textAlign: 'right' }}>
+                <p style={{ fontWeight: 800, fontSize: '1.1rem' }}>₦{Number(a.amount).toLocaleString()}</p>
+                <span className={`badge badge-${a.status}`} style={{ marginTop: 4 }}>
+                  {a.status.replace('_', ' ')}
+                </span>
+              </div>
             </div>
 
             {a.status !== 'done' && a.status !== 'cancelled' && (
-              <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
+              <div style={{ display: 'flex', gap: 8 }}>
                 {a.status === 'pending' && (
-                  <button className="btn btn-secondary" style={{ padding: '10px', fontSize: '0.85rem' }}
-                    onClick={() => updateStatus(a.id, 'in_progress')}>Start</button>
+                  <button className="btn btn-ghost btn-sm" style={{ flex: 1 }}
+                    onClick={() => updateStatus(a.id, 'in_progress')}>▶ Start</button>
                 )}
-                <button className="btn btn-primary" style={{ padding: '10px', fontSize: '0.85rem' }}
+                <button className="btn btn-primary btn-sm" style={{ flex: 2 }}
                   onClick={() => router.push(`/payment?appointment_id=${a.id}&amount=${a.amount}`)}>
-                  Collect Payment
+                  Collect ₦{Number(a.amount).toLocaleString()}
                 </button>
-                <button className="btn btn-danger" style={{ padding: '10px', fontSize: '0.85rem', width: 'auto', flex: '0 0 auto' }}
+                <button className="btn btn-danger btn-sm" style={{ width: 44, padding: '10px 0', flex: '0 0 44px' }}
                   onClick={() => updateStatus(a.id, 'cancelled')}>✕</button>
               </div>
             )}

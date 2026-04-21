@@ -2,20 +2,22 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+const links = [
+  { href: '/dashboard', icon: '📊', label: 'Today' },
+  { href: '/appointments', icon: '📋', label: 'Bookings' },
+  { href: '/new-appointment', icon: '➕', label: 'New' },
+];
+
 export default function BottomNav() {
   const path = usePathname();
-  const active = (href: string) => path === href ? 'active' : '';
   return (
     <nav className="nav">
-      <Link href="/dashboard" className={active('/dashboard')}>
-        <span className="nav-icon">📊</span>Today
-      </Link>
-      <Link href="/appointments" className={active('/appointments')}>
-        <span className="nav-icon">📋</span>Bookings
-      </Link>
-      <Link href="/new-appointment" className={active('/new-appointment')}>
-        <span className="nav-icon">➕</span>New
-      </Link>
+      {links.map(l => (
+        <Link key={l.href} href={l.href} className={path === l.href ? 'active' : ''}>
+          <span className="nav-icon">{l.icon}</span>
+          {l.label}
+        </Link>
+      ))}
     </nav>
   );
 }
