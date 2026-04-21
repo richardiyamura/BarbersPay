@@ -1,0 +1,12 @@
+'use client';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
+export function useAuth() {
+  const router = useRouter();
+  useEffect(() => {
+    if (!localStorage.getItem('bp_token')) {
+      router.replace('/login');
+    }
+  }, [router]);
+}
