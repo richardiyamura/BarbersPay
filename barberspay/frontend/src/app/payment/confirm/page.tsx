@@ -1,9 +1,9 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { api } from '@/lib/api';
 
-export default function PaymentConfirmPage() {
+function ConfirmContent() {
   const router = useRouter();
   const params = useSearchParams();
   const reference = params.get('reference') || params.get('tx_ref');
@@ -34,4 +34,8 @@ export default function PaymentConfirmPage() {
       <p style={{ color: 'var(--gray)', marginTop: 8 }}>Redirecting…</p>
     </div>
   );
+}
+
+export default function PaymentConfirmPage() {
+  return <Suspense><ConfirmContent /></Suspense>;
 }

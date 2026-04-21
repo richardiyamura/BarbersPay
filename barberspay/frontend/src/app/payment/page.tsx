@@ -1,12 +1,12 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { api } from '@/lib/api';
 import { queueCash, syncQueue } from '@/lib/offlineQueue';
 import BottomNav from '@/components/BottomNav';
 import { useAuth } from '@/hooks/useAuth';
 
-export default function PaymentPage() {
+function PaymentContent() {
   useAuth();
   const router = useRouter();
   const params = useSearchParams();
@@ -146,4 +146,8 @@ export default function PaymentPage() {
       <BottomNav />
     </div>
   );
+}
+
+export default function PaymentPage() {
+  return <Suspense><PaymentContent /></Suspense>;
 }
