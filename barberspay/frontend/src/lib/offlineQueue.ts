@@ -5,7 +5,7 @@ const QUEUE_KEY = 'bp_offline_cash';
 export interface CashEntry {
   appointment_id?: number;
   amount: number;
-  timestamp: number;
+  timestamp?: number;
 }
 
 export function queueCash(entry: CashEntry) {
