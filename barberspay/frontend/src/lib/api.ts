@@ -1,4 +1,5 @@
-const BASE = process.env.NEXT_PUBLIC_API_URL;
+// All requests go to /api/... (Next.js proxy) — works in any environment
+const BASE = '/api';
 
 function getToken() {
   return typeof window !== 'undefined' ? localStorage.getItem('bp_token') : null;
